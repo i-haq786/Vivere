@@ -7,6 +7,9 @@ import com.fitness.activityService.repository.ActivityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor // this only generates constructor for final and not null fields
 public class ActivityService {
@@ -41,5 +44,23 @@ public class ActivityService {
         activityResponse.setUpdatedAt(activity.getUpdatedAt());
 
         return activityResponse;
+    }
+
+    public List<ActivityResponse> getUserActivities(String userId) {
+
+            List<Activity> allActivities = activityRepository.findByUserId(userId);
+
+            if(allActivities.isEmpty())
+                throw new RuntimeException("No user Found with this userId: "+userId);
+
+        return allActivities.stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    public ActivityResponse getActivityById(String activityId) {
+        return activityRepository.findById(activityId)
+                .map(this::mapToResponse)
+                .orElseThrow(()->new RuntimeException("No activity found with this activityId: +" + activityId));
     }
 }
