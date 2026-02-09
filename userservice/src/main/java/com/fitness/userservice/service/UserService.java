@@ -11,11 +11,12 @@ import org.springframework.stereotype.Service;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-    public UserResponse getUserProfile(String userId) {
-        User user=userRepository.findById(userId)
-                .orElseThrow(()-> new RuntimeException("User Not Found"));
 
-        UserResponse userResponse= new UserResponse();
+    public UserResponse getUserProfile(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User Not Found"));
+
+        UserResponse userResponse = new UserResponse();
         userResponse.setId(user.getId());
         userResponse.setPassword(user.getPassword());
         userResponse.setEmail(user.getEmail());
@@ -28,11 +29,11 @@ public class UserService {
 
     public UserResponse register(RegisterRequest request) {
 
-        if(userRepository.existsByEmail(request.getEmail())){
+        if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already Exists.");
         }
 
-        User user= new User();
+        User user = new User();
         user.setEmail(request.getEmail());
         user.setPassword(request.getFirstName());
         user.setFirstName(request.getFirstName());
@@ -40,7 +41,7 @@ public class UserService {
 
         User savedUser = userRepository.save(user);
 
-        UserResponse userResponse= new UserResponse();
+        UserResponse userResponse = new UserResponse();
         userResponse.setId(savedUser.getId());
         userResponse.setPassword(savedUser.getPassword());
         userResponse.setEmail(savedUser.getEmail());
@@ -51,5 +52,9 @@ public class UserService {
 
         return userResponse;
 
+    }
+
+    public Boolean validateUser(String userId) {
+        return userRepository.existsById(userId);
     }
 }
