@@ -1,12 +1,25 @@
 package com.fitness.aiservice.controller;
 
+import com.fitness.aiservice.dto.RecommendationResponse;
 import com.fitness.aiservice.service.RecommendationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/ai-service")
 public class RecommendationController {
     private final RecommendationService recommendationService;
+
+    @GetMapping
+    public ResponseEntity<List<RecommendationResponse>> getUserRecommendation(@PathVariable String userId) {
+        return ResponseEntity.ok(recommendationService.getUserRecommendations(userId));
+    }
 
 }
