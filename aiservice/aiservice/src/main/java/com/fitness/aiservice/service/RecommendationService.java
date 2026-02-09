@@ -1,5 +1,6 @@
 package com.fitness.aiservice.service;
 
+import com.fitness.aiservice.dto.RecommendationRequest;
 import com.fitness.aiservice.dto.RecommendationResponse;
 import com.fitness.aiservice.model.Recommendation;
 import com.fitness.aiservice.repository.RecommendationRepository;
@@ -39,4 +40,17 @@ public class RecommendationService {
                 .toList();
     }
 
+    public RecommendationResponse addRecommendation(RecommendationRequest recommendationRequest) {
+        Recommendation recommendation = Recommendation.builder()
+                .activityId(recommendationRequest.getActivityId())
+                .userId(recommendationRequest.getUserId())
+                .activityType(recommendationRequest.getActivityType())
+                .recommendation(recommendationRequest.getRecommendation())
+                .improvements(recommendationRequest.getImprovements())
+                .suggestions(recommendationRequest.getSuggestions())
+                .safety(recommendationRequest.getSafety())
+                .build();
+
+        return mapToResponse(recommendationRepository.save(recommendation));
+    }
 }
