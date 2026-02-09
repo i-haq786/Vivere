@@ -8,16 +8,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor // this only generates constructor for final and not null fields
 public class ActivityService {
 
     private final ActivityRepository activityRepository;
+    private final UserValidationService userValidationService;
 
     public ActivityResponse trackActivity(ActivityRequest request) {
-        Activity activity=Activity.builder()
+        boolean isValidUser = userValidationService.validateUser(request.getUserId());
+        if (!isValidUser)
+            throw new RuntimeException("Not a valid User: " + request.getUserId());
+
+        Activity activity = Activity.builder()
                 .userId(request.getUserId())
                 .type(request.getType())
                 .duration(request.getDuration())
@@ -31,8 +35,8 @@ public class ActivityService {
         return mapToResponse(savedActivity);
     }
 
-    private ActivityResponse mapToResponse (Activity activity){
-        ActivityResponse activityResponse= new ActivityResponse();
+    private ActivityResponse mapToResponse(Activity activity) {
+        ActivityResponse activityResponse = new ActivityResponse();
         activityResponse.setId(activity.getId());
         activityResponse.setUserId(activity.getUserId());
         activityResponse.setType(activity.getType());
@@ -48,10 +52,10 @@ public class ActivityService {
 
     public List<ActivityResponse> getUserActivities(String userId) {
 
-            List<Activity> allActivities = activityRepository.findByUserId(userId);
+        List<Activity> allActivities = activityRepository.findByUserId(userId);
 
-            if(allActivities.isEmpty())
-                throw new RuntimeException("No user Found with this userId: "+userId);
+        if (allActivities.isEmpty())
+            throw new RuntimeException("No user Found with this userId: " + userId);
 
         return allActivities.stream()
                 .map(this::mapToResponse)
@@ -61,6 +65,6 @@ public class ActivityService {
     public ActivityResponse getActivityById(String activityId) {
         return activityRepository.findById(activityId)
                 .map(this::mapToResponse)
-                .orElseThrow(()->new RuntimeException("No activity found with this activityId: +" + activityId));
+                .orElseThrow(() -> new RuntimeException("No activity found with this activityId: +" + activityId));
     }
 }
