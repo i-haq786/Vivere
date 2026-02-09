@@ -10,7 +10,6 @@
         <processorPath>
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
         </processorPath>
-        <module name="activityService" />
         <module name="userservice" />
       </profile>
       <profile name="Maven default annotation processors profile" enabled="true">
@@ -18,6 +17,15 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="eureka" />
+      </profile>
+      <profile name="Annotation profile for activityService" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath>
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
+        </processorPath>
+        <module name="activityService" />
       </profile>
     </annotationProcessing>
   </component>
