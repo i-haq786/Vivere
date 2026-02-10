@@ -15,7 +15,7 @@ import java.util.List;
 public class RecommendationController {
     private final RecommendationService recommendationService;
 
-    @GetMapping("/{userId}")
+    @GetMapping("/userId/{userId}")
     public ResponseEntity<List<RecommendationResponse>> getUserRecommendation(@PathVariable String userId) {
         return ResponseEntity.ok(recommendationService.getUserRecommendations(userId));
     }
@@ -23,5 +23,10 @@ public class RecommendationController {
     @PostMapping
     public ResponseEntity<RecommendationResponse> addRecommendations(@RequestBody RecommendationRequest recommendationRequest) {
         return ResponseEntity.ok(recommendationService.addRecommendation(recommendationRequest));
+    }
+
+    @GetMapping("/activityId/{activityId}")
+    ResponseEntity<RecommendationResponse> getActivityRecommendation(@PathVariable String activityId) {
+        return ResponseEntity.ok(recommendationService.getActivityRecommendation(activityId));
     }
 }
