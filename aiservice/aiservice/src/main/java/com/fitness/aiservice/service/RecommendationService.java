@@ -30,7 +30,7 @@ public class RecommendationService {
     }
 
     public List<RecommendationResponse> getUserRecommendations(String userId) {
-        List<Recommendation> allRecommendations = recommendationRepository.findByUserId();
+        List<Recommendation> allRecommendations = recommendationRepository.findByUserId(userId);
 
         if (allRecommendations.isEmpty())
             throw new RuntimeException("No recommendation found for the user id: " + userId);
