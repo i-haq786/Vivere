@@ -15,7 +15,7 @@ import java.util.List;
 public class RecommendationController {
     private final RecommendationService recommendationService;
 
-    @GetMapping
+    @GetMapping("/{userId}")
     public ResponseEntity<List<RecommendationResponse>> getUserRecommendation(@PathVariable String userId) {
         return ResponseEntity.ok(recommendationService.getUserRecommendations(userId));
     }
