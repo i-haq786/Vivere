@@ -53,4 +53,12 @@ public class RecommendationService {
 
         return mapToResponse(recommendationRepository.save(recommendation));
     }
+
+    public RecommendationResponse getActivityRecommendation(String activityId) {
+
+        return mapToResponse(recommendationRepository.findByActivityId(activityId)
+                .orElseThrow(() ->
+                        new RuntimeException("No activity exists with this activityId: " + activityId)
+                ));
+    }
 }
