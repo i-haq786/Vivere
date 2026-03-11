@@ -1,5 +1,7 @@
 package com.fitness.aiservice.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitness.aiservice.model.Activity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +17,28 @@ public class ActivityAIService {
         String prompt = createPromptForActivity(activity);
         String aiResponse = geminiService.getAnswer(prompt);
         log.info("AI Response is {}", aiResponse);
+        processAiResponse(activity, aiResponse);
         return aiResponse;
+    }
+
+    private void processAiResponse(Activity activity, String aiResponse) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper(); // convert json data into objects
+            JsonNode rootNode = objectMapper.readTree(aiResponse);
+            JsonNode textNode = rootNode.path("candidates")
+                    .get(0)
+                    .path("content")
+                    .path("parts")
+                    .get(0)
+                    .path("text");
+            String jsonContent = textNode.asText()
+                    .replaceAll("```json\\n", "")
+                    .replaceAll("\\n```", "")
+                    .trim();
+            log.info("Parsed response from ai: {}", jsonContent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private String createPromptForActivity(Activity activity) {
