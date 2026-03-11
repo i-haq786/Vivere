@@ -38,6 +38,7 @@ public class ActivityAIService {
                     .path("parts")
                     .get(0)
                     .path("text");
+
             String jsonContent = textNode.asText()
                     .replaceAll("```json\\n", "")
                     .replaceAll("\\n```", "")
@@ -131,7 +132,7 @@ public class ActivityAIService {
 
     private void addAnalysisSection(StringBuilder fullAnalysis, JsonNode analysisNode, String key, String prefix) {
         if (!analysisNode.path(key).isMissingNode()) {
-            fullAnalysis.append(key).append(prefix)
+            fullAnalysis.append(prefix)
                     .append(analysisNode.path(key).asText())
                     .append("\n\n");
         }
